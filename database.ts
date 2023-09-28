@@ -1,4 +1,6 @@
 import mysql, { Connection } from 'mysql';
+const util = require("util"); 
+
 
 export default class MySql{
     private connection!: Connection;
@@ -25,7 +27,7 @@ export default class MySql{
       }
     
       connect() {
+        // this.connection.query = util.promisify(this.connection.query).bind(this.connection);
         this.connection.connect();
-        
       }
 }
