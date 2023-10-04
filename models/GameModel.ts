@@ -1,32 +1,47 @@
-import { rejects } from 'assert';
 import MySql from '../database'
 import BaseModel from './BaseModel';
-import { AssociativeArray } from '../types';
-import RoundModel from './RoundModel'
+import { resolve } from 'dns/promises';
+import { reject } from 'bluebird';
 
 export default class GameModel extends BaseModel{
 
-    private gameId: number
-
-    private playerOneId: number
-
-    private playerTwoId: number
-
-    private rounds: [RoundModel]
-
-    private matchMaking: string[];
-
-    public constructor(players: string,){
+    public constructor(){
         super()
-        this.matchMaking = ['','']        
     }
-    public checkForLobby(){
 
+    public async submitGame(username: string, guesses: number,points: number, timeInSeconds: number){
+        const query = 'INSERT INTO game (user_id, guesses, points, time_seconds) (SELECT id, ?, ?, ? FROM user WHERE username = ?)'
+        return new Promise((resolve, reject)=>{
+                    let result = this.connection.query(query,[guesses, points, timeInSeconds, username], (err,result)=>{
+                        if(err){
+                            return reject(err);
+                        }
+                        resolve(result);
+                    })
+                })
+    }
+
+    public async getLeaderboard(){
+        const query = 'SELECT game.points, user.username FROM game INNER JOIN user ON game.user_id=user.id ORDER BY game.points ASC LIMIT 10;'
+        return new Promise((resolve,reject)=>{
+            let result = this.connection.query(query, (err,result)=>{
+                if(err){
+                    return reject(err);
+                }
+                resolve(result);
+            })
+        })
     }
     
-    public startGame(username:string){
-        if(this.matchMaking[0]!='' && this.matchMaking[1]==''){
-            
-        }
-    }
+    // public async startGame(username: string,numberToGuess: string){
+    //     const query = 'INSERT INTO game (user_id, number_to_guess) (SELECT id, ? FROM user WHERE username = ?)'
+    //     return new Promise((resolve, reject)=>{
+    //         let result = this.connection.query(query,[numberToGuess, username], (err,result)=>{
+    //             if(err){
+    //                 return reject(err);
+    //             }
+    //             resolve(result);
+    //         })
+    //     })
+    // }
 } 

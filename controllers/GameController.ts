@@ -1,24 +1,45 @@
 
 import BaseController from "./BaseController";
-import { createHash } from "crypto";
 import Validation from "../validate";
 import GameModel from "../models/GameModel";
-import { AssociativeArray } from "../types";
 
 
 export default class GameController extends BaseController {
-  // private games: [AssociativeArray<GameModel>];
+
+  private gameModel: GameModel;
 
   public constructor(){
       super();
+      this.gameModel = new GameModel()
   }
 
-  // public CreateNewGame(key: string){
-  //   let newGame = new GameModel();
-  //   this.games.push()
+  async SubmitGame(req: Request, res: Response){
+    let params = req.body;
+
+    let validate = Validation.validateSubmitGame(params)
+    if(validate){
+      let points = params.guesses * params.timeInSeconds
+      let result = await this.gameModel.submitGame(params.username, params.guesses, points, params.timeInSeconds)
+    }
+
+  }
+
+  async GetLeaderboard(res: Response){
+    let result = await this.gameModel.getLeaderboard();
+    res.send(result)
+  }
+
+
+  // async CreateNewGame(req: Request, res: Response){
+  //   const numberToGuess = Math.floor(Math.random() * 10000) + 1000
+  //   let response = {
+  //     error: '',
+  //     numberToGuess: numberToGuess
+  //   }
+  //   let result = await this.gameModel.startGame(req.body.username, numberToGuess);
+  //   console.log(result);
   // }
-  // public test(){
-  //   console.log('TEST');
+  // async test(res:Response){
   // }
 
   // public CreateLobby(){

@@ -49,7 +49,6 @@ export default class LoginController extends BaseController {
           let token = createHash('sha256').update(result[0].username+ Date.now()).digest('hex');
           let tokenResult = await this.loginModel.GenerateToken(result[0].id,token,1);
           response.token = token;
-
         }
     
         res.send(response);

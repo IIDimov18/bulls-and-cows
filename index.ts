@@ -2,10 +2,7 @@ import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
 dotenv.config();
 import MySql from './database'
-import { Server } from 'socket.io';
-import * as socket from './socket';
 import http from 'http';
-import { User } from './user';
 
 const login = require("./routes/login");
 const register = require("./routes/register");
@@ -16,7 +13,6 @@ let mySql = MySql.getConnection()
 const app: Express = express();
 const port = process.env.PORT;
 
-const httpServer = new http.Server(app);
 
 
 app.use(function (req, res, next) {
@@ -53,17 +49,6 @@ app.get('/', (req: Request, res: Response) => {
 app.use('/login',login)
 app.use('/register',register)
 app.use('/game',game)
-
-const io = new Server(httpServer, { cors: { origin: '*' } });
-
-io.on('connection', (client: any) => {
-  io.emit('users-online', User.getUserList());
-
-  socket.disconnectClient(client, io);
-  socket.addUserOnline(client, io);
-  socket.removeUserOnline(client, io);
-});
-
 
 
 app.listen(port, () => {
