@@ -5,20 +5,16 @@ import { reject } from 'bluebird';
 
 export default class GameModel extends BaseModel{
 
-    public constructor(){
-        super()
-    }
-
     public async submitGame(username: string, guesses: number,points: number, timeInSeconds: number){
         const query = 'INSERT INTO game (user_id, guesses, points, time_seconds) (SELECT id, ?, ?, ? FROM user WHERE username = ?)'
         return new Promise((resolve, reject)=>{
-                    let result = this.connection.query(query,[guesses, points, timeInSeconds, username], (err,result)=>{
-                        if(err){
-                            return reject(err);
-                        }
-                        resolve(result);
-                    })
-                })
+            let result = this.connection.query(query,[guesses, points, timeInSeconds, username], (err,result)=>{
+                if(err){
+                    return reject(err);
+                }
+                resolve(result);
+            })
+        })
     }
 
     public async getLeaderboard(){
@@ -33,15 +29,4 @@ export default class GameModel extends BaseModel{
         })
     }
     
-    // public async startGame(username: string,numberToGuess: string){
-    //     const query = 'INSERT INTO game (user_id, number_to_guess) (SELECT id, ? FROM user WHERE username = ?)'
-    //     return new Promise((resolve, reject)=>{
-    //         let result = this.connection.query(query,[numberToGuess, username], (err,result)=>{
-    //             if(err){
-    //                 return reject(err);
-    //             }
-    //             resolve(result);
-    //         })
-    //     })
-    // }
 } 

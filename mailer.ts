@@ -1,6 +1,7 @@
 var nodemailer = require('nodemailer');
 
 export default class Mailer{
+
     static transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -11,6 +12,7 @@ export default class Mailer{
             rejectUnauthorized: false
         }
     })
+
     static sendMail(reciever: string, subject: string, text:string){
         
         let result=true;
@@ -22,11 +24,9 @@ export default class Mailer{
           };
         
         this.transporter.sendMail(mailOptions, function(error,info){
-        if(error){
-            console.log(error)
-            result = error;
-        }
-        console.log(info);
+            if(error){
+                result = error;
+            }
         });
         return result
     }

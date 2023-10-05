@@ -10,11 +10,7 @@ export default class Validation{
             confirmPassword: 'required|same:password'
         }
         let validation = new Validator(body, rules);
-        if(validation.passes()){
-            return true;
-        }else{
-            return validation.errors.errors;
-        }
+        return this.runValidation(body, rules);
     }
 
     static validateLoginUser(body: {}){
@@ -22,12 +18,7 @@ export default class Validation{
             email: 'required|email',
             password: 'required'
         }
-        let validation = new Validator(body, rules);
-        if(validation.passes()){
-            return true;
-        }else{
-            return validation.errors.errors;
-        }
+        return this.runValidation(body, rules);
     }
 
     static validateSubmitGame(body: {}){
@@ -36,6 +27,10 @@ export default class Validation{
             guesses: 'required',
             timeInSeconds: 'required'
         }
+        return this.runValidation(body, rules);
+    }
+
+    static runValidation(body, rules){
         let validation = new Validator(body, rules);
         if(validation.passes()){
             return true;

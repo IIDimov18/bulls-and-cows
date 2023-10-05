@@ -7,15 +7,17 @@ export default class MySql{
 
     private static pool: MySql;
     
-
     public static getConnection() {
+
         if(!this.pool){
             this.pool = new MySql();
         }
+
         return this.pool.connection;
     }
 
     private constructor() {
+
         this.connection = mysql.createConnection({
           host: process.env.DB_HOST,
           user: process.env.DB_USER,
@@ -24,10 +26,12 @@ export default class MySql{
         });
     
         this.connect();
+
       }
     
       connect() {
-        // this.connection.query = util.promisify(this.connection.query).bind(this.connection);
+
         this.connection.connect();
+
       }
 }
